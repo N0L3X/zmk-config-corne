@@ -58,8 +58,8 @@
             bindings = <&kp>, <&kp>; 
         };
         
-        // Umbenennung hier nicht zwingend, aber schadet auch nicht
-        my_lt_sym_space: layer_tap_sym_space_custom { 
+        // Spezifische Layer-Tap Behaviors (einfache Namen, da keine nice_view Shield-Konflikte erwartet werden)
+        lt_sym: layer_tap_symbol { 
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <0>; 
             tapping-term-ms = <250>; 
@@ -68,7 +68,7 @@
             bindings = <&mo SYM>, <&kp SPACE>; 
         };
 
-        my_lt_nav_ret: layer_tap_nav_ret_custom { 
+        lt_nav: layer_tap_navigation { 
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <0>; 
             tapping-term-ms = <250>;
@@ -109,7 +109,7 @@
             &kp TAB      &kp Q            &kp W            &kp E            &kp R            &kp T            &kp Y            &kp U            &kp I            &kp O            &kp P            &td_bspc
             &kp LCTRL    &hrml LGUI A     &hrml LALT S     &hrml LCTRL D    &hrml LSHFT F    &kp G            &kp H            &hrmr RSHFT J    &hrmr RCTRL K    &hrmr RALT L     &hrmr RGUI O     &kp SQT
             &kp LSHFT    &kp Z            &kp X            &kp C            &kp V            &kp B            &kp N            &kp M            &kp COMMA        &kp DOT          &kp MINUS        &kp RSHFT
-                                          &kp LGUI         &my_lt_sym_space &kp LALT                          &kp RCTRL        &my_lt_nav_ret   &kp RGUI
+                                          &kp LGUI         &lt_sym          &kp LALT                          &kp RCTRL        &lt_nav          &kp RGUI
             >;
         };
 
