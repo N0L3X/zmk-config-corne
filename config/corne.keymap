@@ -2,13 +2,26 @@
  * Copyright (c) 2020 The ZMK Contributors
  * SPDX-License-Identifier: MIT
  *
- * Corne V3 QWERTZ Layout - Finaler Versuch mit direkten Key Positions
+ * Corne V3 QWERTZ Layout - Finale korrigierte Version
+ * Mit konsolidiertem Layer-Tap Behavior
  */
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
+
+// Key Positions für Corne (0-41)
+#define LEFT_POSITIONS  0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38
+#define RIGHT_POSITIONS 6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 39 40 41
+/* Key Positions
+╭────────────────────────╮ ╭────────────────────────╮
+│  0   1   2   3   4   5 │ │  6   7   8   9  10  11 │
+│ 12  13  14  15  16  17 │ │ 18  19  20  21  22  23 │
+│ 24  25  26  27  28  29 │ │ 30  31  32  33  34  35 │
+╰───────────╮ 36  37  38 │ │ 39  40  41 ╭───────────╯
+                  ╰────────────╯ ╰────────────╯
+*/
 
 // Layer-Definitionen für bessere Lesbarkeit
 #define DEF 0 // Default Layer
@@ -19,6 +32,7 @@
 / { // Start des Root-Node Overlays
 
     behaviors {
+        // Double-tap Backspace für Wort löschen
         td_bspc: tap_dance_backspace {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -26,18 +40,14 @@
             bindings = <&kp BSPC>, <&kp LC(BSPC)>;
         };
 
+        // Home Row Mods mit Positions-Trigger
         hrml: home_row_mods_left {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>; 
             tapping-term-ms = <200>;
             quick-tap-ms = <150>;
             flavor = "balanced"; 
-            // Rechte Hand Tasten-Indizes (für Corne 0-41 Zählung):
-            // Obere Reihe: 6 7 8 9 10 11
-            // Home Reihe: 18 19 20 21 22 23
-            // Untere Reihe: 30 31 32 33 34 35
-            // Daumen: 39 40 41
-            hold-trigger-key-positions = <6 7 8 9 10 11 18 19 20 21 22 23 30 31 32 33 34 35 39 40 41>;
+            hold-trigger-key-positions = <RIGHT_POSITIONS>;
             bindings = <&kp>, <&kp>; 
         };
 
@@ -47,24 +57,20 @@
             tapping-term-ms = <200>;
             quick-tap-ms = <150>;
             flavor = "balanced";
-            // Linke Hand Tasten-Indizes (für Corne 0-41 Zählung):
-            // Obere Reihe: 0 1 2 3 4 5
-            // Home Reihe: 12 13 14 15 16 17
-            // Untere Reihe: 24 25 26 27 28 29
-            // Daumen: 36 37 38
-            hold-trigger-key-positions = <0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 36 37 38>;
+            hold-trigger-key-positions = <LEFT_POSITIONS>;
             bindings = <&kp>, <&kp>; 
         };
         
-        lt: layer_tap_generic { 
+        // Generisches Layer-Tap Behavior
+        lt: layer_tap { // Einziger Name 'lt', wird als &lt aufgerufen
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>; 
+            #binding-cells = <2>; // Erwartet zwei Parameter: <&mo LAYER_REF>, <&kp TAP_KEY>
             tapping-term-ms = <250>; 
             quick-tap-ms = <150>;
             flavor = "hold-preferred"; 
-            bindings = <&mo>, <&kp>; 
+            bindings = <&mo>, <&kp>; // Platzhalter für Layer und Taste
         };
-    }; 
+    }; // Ende behaviors
 
     macros {
         m_sudo: macro_sudo { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp S>, <&kp U>, <&kp D>, <&kp O>, <&kp SPACE>; };
@@ -76,7 +82,7 @@
         m_arrow: macro_arrow { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp MINUS>, <&kp GT>; };
         m_dquote: macro_dquote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp DQT>, <&kp DQT>, <&kp LEFT>; };
         m_squote: macro_squote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SQT>, <&kp SQT>, <&kp LEFT>; };
-    }; 
+    }; // Ende macros
 
     combos {
         compatible = "zmk,combos";
@@ -86,17 +92,18 @@
             bindings = <&to SYS>;
             layers = <DEF SYM NAV>; 
         };
-    }; 
+    }; // Ende combos
 
     keymap {
         compatible = "zmk,keymap";
 
         default_layer { 
             bindings = <
+            // Linke Hälfte                                                                     // Rechte Hälfte
             &kp TAB      &kp Q            &kp W            &kp E            &kp R            &kp T            &kp Y            &kp U            &kp I            &kp O            &kp P            &td_bspc
             &kp LCTRL    &hrml LGUI A     &hrml LALT S     &hrml LCTRL D    &hrml LSHFT F    &kp G            &kp H            &hrmr RSHFT J    &hrmr RCTRL K    &hrmr RALT L     &hrmr RGUI O     &kp SQT
             &kp LSHFT    &kp Z            &kp X            &kp C            &kp V            &kp B            &kp N            &kp M            &kp COMMA        &kp DOT          &kp MINUS        &kp RSHFT
-                                          &kp LGUI         &lt SYM SPACE    &kp LALT                          &kp RCTRL        &lt NAV RET      &kp RGUI
+                                          &kp LGUI         &lt SYM SPACE    &kp LALT                          &kp RCTRL        &lt NAV RET      &kp RGUI // Aufrufe verwenden jetzt das generische &lt
             >;
         };
 
@@ -126,5 +133,6 @@
                                           &trans           &trans           &trans                            &trans           &trans           &trans
             >;
         };
-    }; 
-};
+    }; // Ende keymap
+
+}; // Ende des Root-Node Overlays / { ... }
