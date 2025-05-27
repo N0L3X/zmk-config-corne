@@ -2,8 +2,7 @@
  * Copyright (c) 2020 The ZMK Contributors
  * SPDX-License-Identifier: MIT
  *
- * Corne V3 QWERTZ Layout - Finale korrigierte Version
- * Mit konsolidiertem Layer-Tap Behavior
+ * Corne V3 QWERTZ Layout - Mit Klammer-Combos und angepasstem Symbol-Layer
  */
 
 #include <behaviors.dtsi>
@@ -32,7 +31,6 @@
 / { // Start des Root-Node Overlays
 
     behaviors {
-        // Double-tap Backspace für Wort löschen
         td_bspc: tap_dance_backspace {
             compatible = "zmk,behavior-tap-dance";
             #binding-cells = <0>;
@@ -40,7 +38,6 @@
             bindings = <&kp BSPC>, <&kp LC(BSPC)>;
         };
 
-        // Home Row Mods mit Positions-Trigger
         hrml: home_row_mods_left {
             compatible = "zmk,behavior-hold-tap";
             #binding-cells = <2>; 
@@ -61,14 +58,13 @@
             bindings = <&kp>, <&kp>; 
         };
         
-        // Generisches Layer-Tap Behavior
-        lt: layer_tap { // Einziger Name 'lt', wird als &lt aufgerufen
+        lt: layer_tap { 
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>; // Erwartet zwei Parameter: <&mo LAYER_REF>, <&kp TAP_KEY>
+            #binding-cells = <2>; 
             tapping-term-ms = <250>; 
             quick-tap-ms = <150>;
             flavor = "hold-preferred"; 
-            bindings = <&mo>, <&kp>; // Platzhalter für Layer und Taste
+            bindings = <&mo>, <&kp>; 
         };
     }; // Ende behaviors
 
@@ -80,8 +76,8 @@
         m_pipe: macro_pipe { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SPACE>, <&kp PIPE>, <&kp SPACE>; };
         m_and: macro_and { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SPACE>, <&kp AMPS>, <&kp AMPS>, <&kp SPACE>; };
         m_arrow: macro_arrow { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp MINUS>, <&kp GT>; };
-        m_dquote: macro_dquote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp DQT>, <&kp DQT>, <&kp LEFT>; };
-        m_squote: macro_squote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SQT>, <&kp SQT>, <&kp LEFT>; };
+        m_dquote: macro_dquote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp DQT>, <&kp DQT>, <&kp LEFT>; }; // Behalten wir als Option
+        m_squote: macro_squote { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp SQT>, <&kp SQT>, <&kp LEFT>; }; // Behalten wir als Option
     }; // Ende macros
 
     combos {
@@ -92,6 +88,14 @@
             bindings = <&to SYS>;
             layers = <DEF SYM NAV>; 
         };
+
+        // Klammer-Combos
+        combo_open_paren { timeout-ms = <50>; key-positions = <13 14>; bindings = <&kp LPAR>; layers = <DEF>; }; // ( via S+D
+        combo_close_paren { timeout-ms = <50>; key-positions = <20 21>; bindings = <&kp RPAR>; layers = <DEF>; }; // ) via K+L
+        combo_open_square { timeout-ms = <50>; key-positions = <12 13>; bindings = <&kp LBKT>; layers = <DEF>; }; // [ via A+S
+        combo_close_square { timeout-ms = <50>; key-positions = <21 22>; bindings = <&kp RBKT>; layers = <DEF>; }; // ] via L+Ö(SQT)
+        combo_open_brace { timeout-ms = <50>; key-positions = <1 2>; bindings = <&kp LBRC>; layers = <DEF>; };   // { via Q+W
+        combo_close_brace { timeout-ms = <50>; key-positions = <8 9>; bindings = <&kp RBRC>; layers = <DEF>; };   // } via I+O
     }; // Ende combos
 
     keymap {
@@ -99,19 +103,19 @@
 
         default_layer { 
             bindings = <
-            // Linke Hälfte                                                                     // Rechte Hälfte
             &kp TAB      &kp Q            &kp W            &kp E            &kp R            &kp T            &kp Y            &kp U            &kp I            &kp O            &kp P            &td_bspc
             &kp LCTRL    &hrml LGUI A     &hrml LALT S     &hrml LCTRL D    &hrml LSHFT F    &kp G            &kp H            &hrmr RSHFT J    &hrmr RCTRL K    &hrmr RALT L     &hrmr RGUI O     &kp SQT
             &kp LSHFT    &kp Z            &kp X            &kp C            &kp V            &kp B            &kp N            &kp M            &kp COMMA        &kp DOT          &kp MINUS        &kp RSHFT
-                                          &kp LGUI         &lt SYM SPACE    &kp LALT                          &kp RCTRL        &lt NAV RET      &kp RGUI // Aufrufe verwenden jetzt das generische &lt
+                                          &kp LGUI         &lt SYM SPACE    &kp LALT                          &kp RCTRL        &lt NAV RET      &kp RGUI
             >;
         };
 
         symbol_layer { 
             bindings = <
+            // Linke Hälfte                                                                // Rechte Hälfte
             &kp ESC      &kp N1           &kp N2           &kp N3           &kp N4           &kp N5           &kp N6           &kp N7           &kp N8           &kp N9           &kp N0           &kp PLUS
-            &trans       &kp EXCL         &kp AT           &kp HASH         &kp DLLR         &kp PRCNT        &kp CARET        &kp AMPS         &kp ASTRK        &kp LPAR         &kp RPAR         &kp BSLH
-            &trans       &kp TILDE        &kp GRAVE        &kp LC(Z)        &kp LC(X)        &kp LC(C)        &kp LBRC         &kp RBRC         &kp LBKT         &kp RBKT         &kp PIPE         &kp LC(V)
+            &trans       &kp EXCL         &kp AT           &kp HASH         &kp DLLR         &kp PRCNT        &kp CARET        &kp AMPS         &kp ASTRK        &kp LT           &kp GT           &kp BSLH // LPAR/RPAR durch LT/GT ersetzt wegen Combos
+            &trans       &kp TILDE        &kp GRAVE        &kp LC(Z)        &kp LC(X)        &kp LC(C)        &kp DQT          &kp COLON        &kp UNDERSCORE   &kp EQUAL        &kp PIPE         &kp LC(V) // DQT, COLON, _, = hinzugefügt
                                           &trans           &trans           &trans                            &trans           &trans           &trans
             >;
         };
