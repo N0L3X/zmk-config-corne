@@ -2,7 +2,7 @@
  * Copyright (c) 2020 The ZMK Contributors
  * SPDX-License-Identifier: MIT
  *
- * Corne V3 QWERTZ Layout - Finale Version
+ * Corne V3 QWERTZ Layout - Finale korrigierte Version
  * Inklusive Key Position Defines, korrigierten Behaviors & Macros
  */
 
@@ -47,9 +47,9 @@
             #binding-cells = <2>; // Erwartet zwei Parameter: <hold_key>, <tap_key>
             tapping-term-ms = <200>;
             quick-tap-ms = <150>;
-            flavor = "balanced"; // Oder "tap-preferred" / "hold-preferred" je nach Vorliebe
+            flavor = "balanced"; 
             hold-trigger-key-positions = <RIGHT_POSITIONS>;
-            // KEINE 'bindings = <...>, <...>;' Zeile hier!
+            bindings = <&kp>, <&kp>; // Platzhalter für die Parameter aus dem Keymap-Aufruf
         };
 
         hrmr: home_row_mods_right {
@@ -59,22 +59,22 @@
             quick-tap-ms = <150>;
             flavor = "balanced";
             hold-trigger-key-positions = <LEFT_POSITIONS>;
-            // KEINE 'bindings = <...>, <...>;' Zeile hier!
+            bindings = <&kp>, <&kp>; // Platzhalter für die Parameter aus dem Keymap-Aufruf
         };
         
         // Spezifische Layer-Tap Behaviors für Daumen
         lt_sym_space: layer_tap_sym_space { 
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <0>; // Fest definiert, keine Parameter aus Keymap
+            #binding-cells = <0>; 
             tapping-term-ms = <250>; 
             quick-tap-ms = <150>;
-            flavor = "hold-preferred"; // Layer-Zugriff hat Priorität
+            flavor = "hold-preferred"; 
             bindings = <&mo SYM>, <&kp SPACE>; 
         };
 
         lt_nav_ret: layer_tap_nav_ret { 
             compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <0>; // Fest definiert
+            #binding-cells = <0>; 
             tapping-term-ms = <250>;
             quick-tap-ms = <150>;
             flavor = "hold-preferred";
@@ -83,7 +83,6 @@
     }; // Ende behaviors
 
     macros {
-        // Deine gewünschten Makros mit korrigierter bindings-Syntax
         m_sudo: macro_sudo { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp S>, <&kp U>, <&kp D>, <&kp O>, <&kp SPACE>; };
         m_cd: macro_cd { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp C>, <&kp D>, <&kp SPACE>; };
         m_ls: macro_ls { compatible = "zmk,behavior-macro"; #binding-cells = <0>; wait-ms = <10>; tap-ms = <10>; bindings = <&kp L>, <&kp S>, <&kp SPACE>, <&kp MINUS>, <&kp L>, <&kp A>, <&kp SPACE>; };
@@ -113,20 +112,29 @@
         default_layer { // Layer 0: QWERTZ Base mit Home Row Mods
             bindings = <
             // Linke Hälfte (Tasten 0-5, 6-11, 12-17, Daumen 18-20)                     // Rechte Hälfte (Tasten 21-26, 27-32, 33-38, Daumen 39-41)
-            // Reihe oben: 0-5 links, 21-26 rechts
+            // Tasten-Nummerierung laut Diagramm oben:
+            // Links Oben: 0  1  2  3  4  5      Rechts Oben:  6  7  8  9 10 11
+            // Links Home: 12 13 14 15 16 17      Rechts Home: 18 19 20 21 22 23
+            // Links Unten:24 25 26 27 28 29      Rechts Unten:30 31 32 33 34 35
+            // Daumen Links:  36 37 38            Daumen Rechts:    39 40 41
+            
+            // Angepasste Tasten-Nummerierung für Standard Corne 3x6 + 3 Daumen pro Seite:
+            // Linke Hälfte: 0-5 (obere), 6-11 (Mitte/Home), 12-17 (untere), 18-20 (Daumen)
+            // Rechte Hälfte: 21-26 (obere), 27-32 (Mitte/Home), 33-38 (untere), 39-41 (Daumen)
+
+            // Reihe oben
             &kp TAB      &kp Q            &kp W            &kp E            &kp R            &kp T            &kp Y            &kp U            &kp I            &kp O            &kp P            &td_bspc
-            // Reihe mitte (home): 6-11 links, 27-32 rechts
-            &kp LCTRL    &hrml LGUI A     &hrml LALT S     &hrml LCTRL D    &hrml LSHFT F    &kp G            &kp H            &hrmr RSHFT J    &hrmr RCTRL K    &hrmr RALT L     &hrmr RGUI O     &kp SQT  // O für Ö
-            // Reihe unten: 12-17 links, 33-38 rechts
+            // Home row
+            &kp LCTRL    &hrml LGUI A     &hrml LALT S     &hrml LCTRL D    &hrml LSHFT F    &kp G            &kp H            &hrmr RSHFT J    &hrmr RCTRL K    &hrmr RALT L     &hrmr RGUI O     &kp SQT
+            // Reihe unten
             &kp LSHFT    &kp Z            &kp X            &kp C            &kp V            &kp B            &kp N            &kp M            &kp COMMA        &kp DOT          &kp MINUS        &kp RSHFT
-            // Daumen: 18-20 links, 39-41 rechts
+            // Daumen (von links nach rechts gezählt pro Hand)
                                           &kp LGUI         &lt_sym_space    &kp LALT                          &kp RCTRL        &lt_nav_ret      &kp RGUI
             >;
         };
 
         symbol_layer { // Layer 1 (SYM): Symbole & Zahlen
             bindings = <
-            // Linke Hälfte                                                                // Rechte Hälfte
             &kp ESC      &kp N1           &kp N2           &kp N3           &kp N4           &kp N5           &kp N6           &kp N7           &kp N8           &kp N9           &kp N0           &kp PLUS
             &trans       &kp EXCL         &kp AT           &kp HASH         &kp DLLR         &kp PRCNT        &kp CARET        &kp AMPS         &kp ASTRK        &kp LPAR         &kp RPAR         &kp BSLH
             &trans       &kp TILDE        &kp GRAVE        &kp LC(Z)        &kp LC(X)        &kp LC(C)        &kp LBRC         &kp RBRC         &kp LBKT         &kp RBKT         &kp PIPE         &kp LC(V)
@@ -136,7 +144,6 @@
 
         navigation_layer { // Layer 2 (NAV): Navigation, F-Tasten & Macros
             bindings = <
-            // Linke Hälfte                                                                // Rechte Hälfte
             &kp F1       &kp F2           &kp F3           &kp F4           &kp F5           &kp F6           &kp F7           &kp F8           &kp F9           &kp F10          &kp F11          &kp F12
             &trans       &m_sudo          &m_cd            &m_git           &m_ls            &m_pipe          &m_and           &kp LEFT         &kp DOWN         &kp UP           &kp RIGHT        &kp DEL
             &trans       &m_squote        &m_dquote        &m_arrow         &trans           &trans           &m_arrow         &kp HOME         &kp PG_DN        &kp PG_UP        &kp END          &trans
@@ -146,10 +153,9 @@
 
         system_layer { // Layer 3 (SYS): System-Funktionen (Bluetooth, Reset)
             bindings = <
-            // Linke Hälfte                                                                // Rechte Hälfte
             &out OUT_USB  &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4     &trans           &trans           &trans           &trans           &trans           &trans
             &trans        &trans           &trans           &trans           &trans           &trans           &trans           &trans           &trans           &trans           &trans           &trans
-            &trans        &trans           &trans           &trans           &trans           &bt BT_CLR_ALL   &trans           &trans           &sys_reset       &bootloader      &trans           &trans // ACHTUNG: Reset!
+            &trans        &trans           &trans           &trans           &trans           &bt BT_CLR_ALL   &trans           &trans           &sys_reset       &bootloader      &trans           &trans
                                           &trans           &trans           &trans                            &trans           &trans           &trans
             >;
         };
